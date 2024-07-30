@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: 'FontLight';
+    src: url('../src/fonts/NeueHaasDisplayLight.ttf') format('truetype');
+    font-weight: lighter;
+  }
+  
+  @font-face {
+    font-family: 'FontBold';
+    src: url('../src/fonts/NeueHaasDisplayBold.ttf') format('truetype');
+    font-weight: bold;
+  }
+  
+  @font-face {
+    font-family: 'FontMedium';
+    src: url('../src/fonts/NeueHaasDisplayMediu.ttf') format('truetype');
+    font-weight: lighter;
+  }
+  
+  @font-face {
+    font-family: 'FontThin';
+    src: url('../src/fonts/NeueHaasDisplayThin.ttf') format('truetype');
+    font-style: thin;
+  }
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+  font-size: 90%;
+  
+}
+
+/* styles.css */
+/* styles.css */
+/* styles.css */
+/* styles.css */
+.scrollbar-hide {
+  overflow-x: auto; /* Allows horizontal scrolling */
+  overflow-y: visible; /* Ensures vertical scrolling is not affected */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Hides scrollbar for Chrome, Safari, and Opera */
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none; /* Hides scrollbar for Internet Explorer and Edge */
+  scrollbar-width: none; /* Hides scrollbar for Firefox */
+}
+
+
+
+
+
