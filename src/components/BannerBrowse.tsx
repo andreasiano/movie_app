@@ -59,13 +59,6 @@ export default function BannerBrowse() {
     }, 500); // Duration of fade-out transition
   };
 
-  const handleBulletClick = (index: number) => {
-    setFade(true);
-    setTimeout(() => {
-      setCurrentIndex(index);
-    }, 500); // Duration of fade-out transition
-  };
-
   const currentBanner = bannerData[currentIndex];
   const bannerTitle = currentBanner.title || currentBanner.name; // Get the title or name
   const mediaTypeIcon = currentBanner.media_type === 'movie' ? <FaFilm /> : <FaTv />; // Determine the media type icon
