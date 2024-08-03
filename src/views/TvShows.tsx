@@ -48,7 +48,6 @@ export default function TvShows() {
 
   return (
     <div className="h-full w-full">
-      <h3 className="text-xl mb-5">Popular TV Shows</h3>
       <div className="container">
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {data.map((item, index) => (
