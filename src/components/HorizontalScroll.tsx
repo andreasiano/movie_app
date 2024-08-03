@@ -1,14 +1,17 @@
 import { BannerItem } from "../components/BannerBrowse";
 import Card from "../components/Card";
+
 import { MdArrowBack, MdArrowForward } from "react-icons/md";
 import { useRef } from "react";
+import ScrollSkel from "../skeletons/ScrollSkel";
 
 interface HorizontalScrollProps {
   title: string;
   data: BannerItem[];
+  isLoading?: boolean; // Add an isLoading prop to control the loading state
 }
 
-export default function HorizontalScroll({ title, data }: HorizontalScrollProps) {
+export default function HorizontalScroll({ title, data, isLoading = false }: HorizontalScrollProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const scroll = (scrollOffset: number) => {
@@ -46,16 +49,21 @@ export default function HorizontalScroll({ title, data }: HorizontalScrollProps)
         className="flex overflow-x-auto space-x-4 py-2 scrollbar-hide"
         style={{ scrollBehavior: "smooth" }}
       >
-        {data.map((item, index) => (
-          <Card
-            key={item.id}
-            data={item}
-            index={index + 1}
-            trending={title === "Trending"} 
-          />
-        ))}
+        {isLoading
+          ? Array.from({ length: 5 }).map((_, index) => (
+              <ScrollSkel key={index} />
+            ))
+          : data.map((item, index) => (
+              <Card
+                key={item.id}
+                data={item}
+                index={index + 1}
+                trending={title === "Trending"}
+              />
+            ))}
       </div>
     </div>
   );
 }
+
 

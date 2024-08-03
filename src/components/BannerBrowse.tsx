@@ -2,12 +2,13 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from '../redux/store/store';
 import { FaArrowLeft, FaArrowRight, FaStar, FaEye, FaFilm, FaTv } from 'react-icons/fa';
+import BannerSkel from "../skeletons/BannerSkel";
 
 export interface BannerItem {
   release_date: string;
   id: number;
   backdrop_path: string;
-  poster_path: string,
+  poster_path: string;
   title?: string;
   name?: string;
   overview: string;
@@ -41,25 +42,33 @@ export default function BannerBrowse() {
     }
   }, [fade]);
 
-  if (!bannerData || bannerData.length === 0) {
-    return <div>No data available</div>;
-  }
-
   const handleNextImage = () => {
-    setFade(true);
-    setTimeout(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % bannerData.length);
-    }, 500); // Duration of fade-out transition
+    if (bannerData && bannerData.length > 0) {
+      setFade(true);
+      setTimeout(() => {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % bannerData.length);
+      }, 500); // Duration of fade-out transition
+    }
   };
 
   const handlePrevImage = () => {
-    setFade(true);
-    setTimeout(() => {
-      setCurrentIndex((prevIndex) => (prevIndex - 1 + bannerData.length) % bannerData.length);
-    }, 500); // Duration of fade-out transition
+    if (bannerData && bannerData.length > 0) {
+      setFade(true);
+      setTimeout(() => {
+        setCurrentIndex((prevIndex) => (prevIndex - 1 + bannerData.length) % bannerData.length);
+      }, 500); // Duration of fade-out transition
+    }
   };
 
+  if (!bannerData || bannerData.length === 0) {
+    return (
+      <BannerSkel/>
+    );
+  }
+
   const currentBanner = bannerData[currentIndex];
+  if (!currentBanner) return null;
+
   const bannerTitle = currentBanner.title || currentBanner.name; // Get the title or name
   const mediaTypeIcon = currentBanner.media_type === 'movie' ? <FaFilm /> : <FaTv />; // Determine the media type icon
 
@@ -69,7 +78,7 @@ export default function BannerBrowse() {
   };
 
   return (
-    <section className="relative mb-10 w-full h-[80vh] overflow-hidden">
+    <section className="relative mb-10 w-full h-[80vh] overflow-hidden rounded-xl">
       <div className={`absolute inset-0 transition-opacity duration-500 ${fade ? 'opacity-0' : 'opacity-100'}`}>
         <img
           src={imageUrl + currentBanner.backdrop_path}
@@ -79,7 +88,7 @@ export default function BannerBrowse() {
       </div>
       <div className="absolute inset-0 bg-gradient-to-t from-neutral-900 to-transparent rounded-xl z-10"></div>
       <div className="absolute inset-0 flex flex-col items-center lg:items-start justify-center lg:mx-10 lg:px-8 z-20">
-        <div className="lg:w-[500px] xs: w-[250px] mx-auto lg:mx-0 lg:text-left text-center">
+        <div className="lg:w-[500px] xs:w-[250px] mx-auto lg:mx-0 lg:text-left text-center">
           <h1 className="text-white lg:text-5xl text-3xl md:text-3xl font-bold mb-4">{bannerTitle}</h1>
           <h2 className="text-gray-300 xs:text-lg sm:text-sm md:text-base lg:text-xl font-custom-light">
             {truncateText(currentBanner.overview, 150)}
@@ -116,6 +125,8 @@ export default function BannerBrowse() {
     </section>
   );
 }
+
+
 
 
 
