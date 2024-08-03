@@ -1,16 +1,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
 import GridCard from "../components/GridCard";
+import GridSkel from "../skeletons/GridSkel";
 
 export default function TvShows() {
-  const params = useParams();
   const [pageN, setPageN] = useState<number>(1);
   const [data, setData] = useState<any[]>([]);
   const [totalPageN, setTotalPageN] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
-
-  console.log(params, 'params');
 
   const fetchData = async () => {
     if (loading) return;
@@ -23,7 +20,6 @@ export default function TvShows() {
 
       setData((prev) => [...prev, ...response.data.results]);
       setTotalPageN(response.data.total_pages);
-      console.log(response.data.results, 'data');
     } catch (error) {
       console.error("Failed to fetch TV show data:", error);
     } finally {
@@ -50,19 +46,25 @@ export default function TvShows() {
     <div className="h-full w-full">
       <div className="container">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {data.map((item, index) => (
-            <GridCard
-              key={item.id}
-              data={item}
-              index={index + 1}
-              trending={false}
-            />
-          ))}
+          {loading
+            ? Array(12).fill(null).map((_, index) => (
+                <GridSkel key={index} />
+              ))
+            : data.map((item, index) => (
+                <GridCard
+                  key={item.id}
+                  data={item}
+                  index={index + 1}
+                  trending={false}
+                />
+              ))
+          }
         </div>
       </div>
     </div>
   );
 }
+
 
 
 
