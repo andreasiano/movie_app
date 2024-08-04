@@ -21,7 +21,7 @@ interface MenuSection {
   items: MenuItem[];
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ toggleSidebar }) => {
+export default function Sidebar({ toggleSidebar }: SidebarProps) {
   const menuItems: MenuSection[] = [
     {
       id: 1,
@@ -85,8 +85,6 @@ const Sidebar: React.FC<SidebarProps> = ({ toggleSidebar }) => {
     </div>
   );
 };
-
-export default Sidebar;
 
 
 

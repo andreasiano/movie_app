@@ -1,12 +1,11 @@
 import { createBrowserRouter } from 'react-router-dom';
 import App from '../App';
 import Details from '../views/Details';
-import Movies from '../views/Movies';
-import TvShows from '../views/TvShows';
 import SearchPage from '../views/SearchPage';
 import Settings from '../views/Settings';
 import LogOut from '../views/LogOut';
 import Browse from '../views/Browse';
+import Explore from '../views/Explore';
 
 export const router = createBrowserRouter([
   {
@@ -16,14 +15,6 @@ export const router = createBrowserRouter([
       {
         path: 'browse',
         element: <Browse />
-      },
-      {
-        path: 'movie',
-        element: <Movies />
-      },
-      {
-        path: 'tv',
-        element: <TvShows />
       },
       {
         path: 'searchpage',
@@ -38,13 +29,13 @@ export const router = createBrowserRouter([
         element: <LogOut />
       },
       {
-        path: 'movie/:id',
-        element: <Details />
-      },
-      {
-        path: 'tv/:id',
-        element: <Details />
-      },
+        path : ":explore",
+        element : <Explore/>
+    },
+    {
+        path : ":explore/:id",
+        element : <Details/>
+    },
       {
         path: '*',
         element: <Browse />

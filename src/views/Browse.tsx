@@ -13,7 +13,7 @@ export default function Browse() {
   const {data: popularTvData} = useFetch('/tv/popular')
 
   return (
-    <div className="flex scrollbar-hide flex-col ">
+    <div className="flex scrollbar-hide mb-10 flex-col">
       <BannerBrowse />
       <HorizontalScroll title="Trending" data={trendingData} />
       <HorizontalScroll title="Top Rated" data={topRatedData} />

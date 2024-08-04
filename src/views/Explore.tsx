@@ -2,26 +2,27 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import GridCard from "../components/GridCard";
 import GridSkel from "../skeletons/GridSkel";
+import { useParams } from "react-router-dom";
 
-export default function TvShows() {
+export default function Explore() {
+  const params = useParams();
   const [pageN, setPageN] = useState<number>(1);
   const [data, setData] = useState<any[]>([]);
   const [totalPageN, setTotalPageN] = useState<number>(0);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false); 
 
   const fetchData = async () => {
-    if (loading) return;
     setLoading(true);
-
     try {
-      const response = await axios.get('/discover/tv', {
-        params: { page: pageN }
+      const response = await axios.get(`/discover/${params.explore}`, {
+        params: {
+          page: pageN
+        }
       });
-
-      setData((prev) => [...prev, ...response.data.results]);
+      setData((prev) => (pageN === 1 ? response.data.results : [...prev, ...response.data.results]));
       setTotalPageN(response.data.total_pages);
     } catch (error) {
-      console.error("Failed to fetch TV show data:", error);
+      console.log('error', error);
     } finally {
       setLoading(false);
     }
@@ -34,18 +35,23 @@ export default function TvShows() {
   };
 
   useEffect(() => {
+    setData([]); // Reset data when changing category
+    setPageN(1); // Reset to first page when changing category
+  }, [params.explore]);
+
+  useEffect(() => {
     fetchData();
-  }, [pageN]);
+  }, [pageN, params.explore]);
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll); // Clean up
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
     <div className="h-full w-full">
       <div className="container">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid pb-10 grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {loading
             ? Array(12).fill(null).map((_, index) => (
                 <GridSkel key={index} />
@@ -56,6 +62,7 @@ export default function TvShows() {
                   data={item}
                   index={index + 1}
                   trending={false}
+                  media_type={params.explore ?? 'default'}
                 />
               ))
           }
@@ -64,6 +71,8 @@ export default function TvShows() {
     </div>
   );
 }
+
+
 
 
 
