@@ -26,11 +26,15 @@ export default function BannerBrowse() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      handleNextImage();
+      setFade(true);
+      setTimeout(() => {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % (bannerData?.length || 1));
+        setFade(false);
+      }, 500); // Wait for fade-out before changing the image
     }, 5000); // Change the image every 5 seconds
 
     return () => clearInterval(interval); // Clear the interval on component unmount
-  }, [currentIndex]);
+  }, [bannerData]);
 
   useEffect(() => {
     if (fade) {
@@ -47,7 +51,8 @@ export default function BannerBrowse() {
       setFade(true);
       setTimeout(() => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % bannerData.length);
-      }, 500); // Duration of fade-out transition
+        setFade(false);
+      }, 500); // Wait for fade-out before changing the image
     }
   };
 
@@ -56,14 +61,13 @@ export default function BannerBrowse() {
       setFade(true);
       setTimeout(() => {
         setCurrentIndex((prevIndex) => (prevIndex - 1 + bannerData.length) % bannerData.length);
-      }, 500); // Duration of fade-out transition
+        setFade(false);
+      }, 500); // Wait for fade-out before changing the image
     }
   };
 
   if (!bannerData || bannerData.length === 0) {
-    return (
-      <BannerSkel/>
-    );
+    return <BannerSkel />;
   }
 
   const currentBanner = bannerData[currentIndex];
@@ -125,6 +129,8 @@ export default function BannerBrowse() {
     </section>
   );
 }
+
+
 
 
 
