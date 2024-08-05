@@ -11,11 +11,14 @@ interface CardProps {
   data: BannerItem;
   trending: boolean;
   index: number;
+  media_type: string
 }
 
-export default function Card({ data, trending, index }: CardProps) {
+export default function Card({ data, trending, index, media_type }: CardProps) {
   const imageUrl = useSelector((state: RootState) => state.movieData.imageUrl);
   const fullImageUrl = `${imageUrl}${data.poster_path}`;
+
+  const mediaType = data.media_type ?? media_type
 
   const formattedDate = moment(data.release_date).format('MMMM Do, YYYY');
   const [isLiked, setIsLiked] = useState(false);
@@ -24,7 +27,7 @@ export default function Card({ data, trending, index }: CardProps) {
     setIsLiked(!isLiked);
   };
   return (
-    <Link to={`/${data.media_type}/${data.id}`} className="max-w-[280px] min-w-[280px] relative bg-gray-800 bg-opacity-20 rounded-xl">
+    <Link to={"/"+mediaType+"/"+data.id} className="max-w-[280px] min-w-[280px] relative bg-gray-800 bg-opacity-20 rounded-xl">
       <img src={fullImageUrl} alt={data.title || data.name} className="rounded-xl opacity-80" />
       <div className="absolute top-5 left-0">
         {trending && (

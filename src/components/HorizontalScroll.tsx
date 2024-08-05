@@ -1,6 +1,5 @@
 import { BannerItem } from "../components/BannerBrowse";
 import Card from "../components/Card";
-
 import { MdArrowBack, MdArrowForward } from "react-icons/md";
 import { useRef } from "react";
 import ScrollSkel from "../skeletons/ScrollSkel";
@@ -9,11 +8,11 @@ interface HorizontalScrollProps {
   title: string;
   data: BannerItem[];
   isLoading?: boolean; // Add an isLoading prop to control the loading state
+  media_type: string
 }
 
-export default function HorizontalScroll({ title, data, isLoading = false }: HorizontalScrollProps) {
+export default function HorizontalScroll({ title, data, isLoading = false, media_type }: HorizontalScrollProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-
   const scroll = (scrollOffset: number) => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollBy({
@@ -59,6 +58,7 @@ export default function HorizontalScroll({ title, data, isLoading = false }: Hor
                 data={item}
                 index={index + 1}
                 trending={title === "Trending"}
+                media_type={media_type}
               />
             ))}
       </div>

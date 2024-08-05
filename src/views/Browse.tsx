@@ -15,12 +15,12 @@ export default function Browse() {
   return (
     <div className="flex scrollbar-hide mb-10 flex-col">
       <BannerBrowse />
-      <HorizontalScroll title="Trending" data={trendingData} />
-      <HorizontalScroll title="Top Rated" data={topRatedData} />
-      <HorizontalScroll title="Now Playing" data={[...nowPlayingData].reverse()} />
-      <HorizontalScroll title="Popular" data={[...popularData].reverse()} />
-      <HorizontalScroll title="Trending Series" data={tvAiringTodayData} />
-      <HorizontalScroll title="Popular Series" data={popularTvData} />
+      <HorizontalScroll title="Trending" data={trendingData} media_type=""/>
+      <HorizontalScroll title="Top Rated" data={topRatedData} media_type="movie"/>
+      <HorizontalScroll title="Now Playing" data={[...nowPlayingData].reverse()} media_type="movie"/>
+      <HorizontalScroll title="Popular" data={[...popularData].reverse()} media_type="tv" />
+      <HorizontalScroll title="Trending Series" data={tvAiringTodayData} media_type="tv" />
+      <HorizontalScroll title="Popular Series" data={popularTvData}media_type="tv" />
     </div>
   );
 }
