@@ -35,7 +35,7 @@ export default function TopBar({ toggleSidebar }: TopBarProps) {
             <FaSearch size={20} className="absolute xs:left-6 lg:left-3 top-1/2 transform -translate-y-1/2 text-white" />
           </button>
           <input
-            className="lg:w-[300px] xs:w-[100px] pl-10 pr-10 py-2 border-2 border-red-200 opacity-30 rounded-[15px] bg-gray-800 outline-none text-white placeholder-gray-200 font-custom-medium hidden lg:block"
+            className="lg:w-[300px] xs:w-[100px] pl-10 pr-10 py-2 border-2 border-red-200 opacity-30 rounded-[15px] bg-gray-800 outline-none text-white placeholder-gray-200 font-custom-light hidden lg:block"
             type="text"
             placeholder="Search..."
             onChange={(e) => setSearchInput(e.target.value)}

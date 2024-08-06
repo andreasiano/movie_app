@@ -43,7 +43,7 @@ export default function Sidebar({ toggleSidebar }: SidebarProps) {
   ];
 
   return (
-    <div className="w-64 border-r-2 border-opacity-20 border-gray-500 bg-gray-700 md:bg-custom-bg pt-4 over h-full relative">
+    <div className="w-64 border-r-2 border-opacity-20 border-gray-500 bg-gray-700 md:bg-custom-bg pt-4 over font-custom-light h-full relative">
       <div className="md:hidden flex justify-end">
         <button onClick={toggleSidebar}>
           <FaTimes className="h-8 w-8 pr-4 text-white" />
