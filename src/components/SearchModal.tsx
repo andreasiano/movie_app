@@ -40,7 +40,7 @@ export default function SearchModal({ isOpen, onClose, onSearch }: SearchModalPr
     <div
       className={`fixed inset-x-0 top-0 transform transition-transform duration-300 ${
         isOpen ? 'translate-y-0' : '-translate-y-full'
-      } sm:hidden`} // Hide on screens larger than mobile breakpoint
+      } sm:hidden`}
       style={{ zIndex: 50 }}
     >
       <div className="bg-zinc-700 p-4 w-full mx-auto">
@@ -51,7 +51,7 @@ export default function SearchModal({ isOpen, onClose, onSearch }: SearchModalPr
               placeholder="Search..."
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              className="pl-10 pr-10 font-custom-light py-2 border-red-200 rounded-md bg-zinc-700 text-white border-none placeholder-gray-200 outline-none w-[400px]"
+              className="pl-10 pr-10 font-custom-light py-2 border-red-200 rounded-md bg-zinc-700 text-white border-none placeholder-gray-200 outline-none w-[200px]"
             />
             <button type="submit" className="absolute left-2 top-1/2 transform -translate-y-1/2">
               <FaSearch size={20} className="text-white" />
