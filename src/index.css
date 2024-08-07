@@ -46,6 +46,10 @@
   scrollbar-width: none; /* Hides scrollbar for Firefox */
 }
 
+.transition-transform {
+  transition: transform 0.3s ease-in-out;
+}
+
 
 
 

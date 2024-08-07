@@ -6,47 +6,27 @@ import { useParams } from "react-router-dom";
 
 export default function Explore() {
   const params = useParams();
-  const [pageN, setPageN] = useState<number>(1);
   const [data, setData] = useState<any[]>([]);
-  const [totalPageN, setTotalPageN] = useState<number>(0);
-  const [loading, setLoading] = useState<boolean>(false); 
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchData = async () => {
     setLoading(true);
+    setError(null); // Reset error state
     try {
-      const response = await axios.get(`/discover/${params.explore}`, {
-        params: {
-          page: pageN
-        }
-      });
-      setData((prev) => (pageN === 1 ? response.data.results : [...prev, ...response.data.results]));
-      setTotalPageN(response.data.total_pages);
+      const response = await axios.get(`/discover/${params.explore}`);
+      setData(response.data.results);
     } catch (error) {
-      console.log('error', error);
+      setError('Failed to load data.');
+      console.error('Error fetching data:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleScroll = () => {
-    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight && pageN < totalPageN) {
-      setPageN(prev => prev + 1);
-    }
-  };
-
-  useEffect(() => {
-    setData([]); // Reset data when changing category
-    setPageN(1); // Reset to first page when changing category
-  }, [params.explore]);
-
   useEffect(() => {
     fetchData();
-  }, [pageN, params.explore]);
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [params.explore]);
 
   return (
     <div className="h-full w-full">
@@ -56,11 +36,13 @@ export default function Explore() {
             ? Array(12).fill(null).map((_, index) => (
                 <GridSkel key={index} />
               ))
-            : data.map((item, index) => (
+            : error
+            ? <div className="text-red-500">{error}</div>
+            : data.map((item) => (
                 <GridCard
                   key={item.id}
                   data={item}
-                  index={index + 1}
+                  index={item.id}
                   trending={false}
                   media_type={params.explore ?? 'default'}
                 />
