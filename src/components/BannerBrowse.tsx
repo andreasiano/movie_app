@@ -22,47 +22,33 @@ export default function BannerBrowse() {
   const imageUrl = useSelector((state: RootState) => state.movieData.imageUrl);
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [fade, setFade] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setFade(true);
-      setTimeout(() => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % (bannerData?.length || 1));
-        setFade(false);
-      }, 500); // Wait for fade-out before changing the image
-    }, 5000); // Change the image every 5 seconds
+      handleNextImage();
+    }, 5000);
 
-    return () => clearInterval(interval); // Clear the interval on component unmount
+    return () => clearInterval(interval);
   }, [bannerData]);
 
-  useEffect(() => {
-    if (fade) {
-      const timeout = setTimeout(() => {
-        setFade(false);
-      }, 500); // Duration of fade-out transition
-
-      return () => clearTimeout(timeout);
-    }
-  }, [fade]);
-
   const handleNextImage = () => {
-    if (bannerData && bannerData.length > 0) {
-      setFade(true);
+    if (bannerData && bannerData.length > 0 && !isTransitioning) {
+      setIsTransitioning(true);
       setTimeout(() => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % bannerData.length);
-        setFade(false);
-      }, 500); // Wait for fade-out before changing the image
+        setIsTransitioning(false);
+      }, 500); // Wait for fade-out before changing the content
     }
   };
 
   const handlePrevImage = () => {
-    if (bannerData && bannerData.length > 0) {
-      setFade(true);
+    if (bannerData && bannerData.length > 0 && !isTransitioning) {
+      setIsTransitioning(true);
       setTimeout(() => {
         setCurrentIndex((prevIndex) => (prevIndex - 1 + bannerData.length) % bannerData.length);
-        setFade(false);
-      }, 500); // Wait for fade-out before changing the image
+        setIsTransitioning(false);
+      }, 500); // Wait for fade-out before changing the content
     }
   };
 
@@ -83,7 +69,7 @@ export default function BannerBrowse() {
 
   return (
     <section className="relative mb-10 w-full h-[80vh] overflow-hidden rounded-xl">
-      <div className={`absolute inset-0 transition-opacity duration-500 ${fade ? 'opacity-0' : 'opacity-100'}`}>
+      <div className={`absolute inset-0 transition-opacity duration-500 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
         <img
           src={imageUrl + currentBanner.backdrop_path}
           className="w-full h-full rounded-xl object-cover"
@@ -91,7 +77,7 @@ export default function BannerBrowse() {
         />
       </div>
       <div className="absolute inset-0 bg-gradient-to-t from-neutral-900 to-transparent rounded-xl z-10"></div>
-      <div className="absolute inset-0 flex flex-col items-center lg:items-start justify-center lg:mx-10 lg:px-8 z-20">
+      <div className={`absolute inset-0 flex flex-col items-center lg:items-start justify-center lg:mx-10 lg:px-8 z-20 transition-opacity duration-500 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
         <div className="lg:w-[500px] xs:w-[250px] mx-auto lg:mx-0 lg:text-left text-center">
           <h1 className="text-white lg:text-5xl text-3xl md:text-3xl font-bold mb-4">{bannerTitle}</h1>
           <h2 className="text-gray-300 xs:text-lg sm:text-sm md:text-base lg:text-xl font-custom-light">
@@ -129,6 +115,8 @@ export default function BannerBrowse() {
     </section>
   );
 }
+
+
 
 
 
