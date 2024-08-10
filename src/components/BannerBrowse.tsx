@@ -23,6 +23,7 @@ export default function BannerBrowse() {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [nextIndex, setNextIndex] = useState(0); // To preload the next image
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -34,6 +35,7 @@ export default function BannerBrowse() {
 
   const handleNextImage = () => {
     if (bannerData && bannerData.length > 0 && !isTransitioning) {
+      setNextIndex((currentIndex + 1) % bannerData.length); // Preload the next image
       setIsTransitioning(true);
       setTimeout(() => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % bannerData.length);
@@ -44,6 +46,7 @@ export default function BannerBrowse() {
 
   const handlePrevImage = () => {
     if (bannerData && bannerData.length > 0 && !isTransitioning) {
+      setNextIndex((currentIndex - 1 + bannerData.length) % bannerData.length); // Preload the previous image
       setIsTransitioning(true);
       setTimeout(() => {
         setCurrentIndex((prevIndex) => (prevIndex - 1 + bannerData.length) % bannerData.length);
@@ -57,6 +60,8 @@ export default function BannerBrowse() {
   }
 
   const currentBanner = bannerData[currentIndex];
+  const nextBanner = bannerData[nextIndex]; // Preload the next image
+
   if (!currentBanner) return null;
 
   const bannerTitle = currentBanner.title || currentBanner.name; // Get the title or name
@@ -69,7 +74,12 @@ export default function BannerBrowse() {
 
   return (
     <section className="relative mb-10 w-full h-[80vh] overflow-hidden rounded-xl">
-      <div className={`absolute inset-0 transition-opacity duration-500 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
+      {/* Preload the next image */}
+      <div style={{ display: 'none' }}>
+        <img src={imageUrl + nextBanner.backdrop_path} alt="Preload" />
+      </div>
+
+      <div className="absolute inset-0 transition-opacity duration-500" style={{ opacity: isTransitioning ? 0 : 1 }}>
         <img
           src={imageUrl + currentBanner.backdrop_path}
           className="w-full h-full rounded-xl object-cover"
@@ -115,6 +125,7 @@ export default function BannerBrowse() {
     </section>
   );
 }
+
 
 
 
