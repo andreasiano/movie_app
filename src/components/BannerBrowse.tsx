@@ -24,14 +24,25 @@ export default function BannerBrowse() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [nextIndex, setNextIndex] = useState(0); // To preload the next image
+  const [isMobile, setIsMobile] = useState(false); // To detect mobile devices
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      handleNextImage();
-    }, 5000);
+    const checkIfMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkIfMobile(); // Initial check
+    window.addEventListener('resize', checkIfMobile); // Update on window resize
 
-    return () => clearInterval(interval);
-  }, [bannerData]);
+    return () => window.removeEventListener('resize', checkIfMobile);
+  }, []);
+
+  useEffect(() => {
+    if (!isMobile) {
+      const interval = setInterval(() => {
+        handleNextImage();
+      }, 5000);
+
+      return () => clearInterval(interval);
+    }
+  }, [bannerData, isMobile]);
 
   const handleNextImage = () => {
     if (bannerData && bannerData.length > 0 && !isTransitioning) {
@@ -125,6 +136,7 @@ export default function BannerBrowse() {
     </section>
   );
 }
+
 
 
 
