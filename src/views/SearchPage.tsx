@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import GridCard from '../components/GridCard';
-import GridSkel from '../skeletons/GridSkel'; // Make sure you have this component
+import GridSkel from '../skeletons/GridSkel'; // Ensure you have this component
 import { BannerItem } from '../components/BannerBrowse';
 
 export default function SearchPage() {
@@ -28,7 +28,13 @@ export default function SearchPage() {
       // Filter out results related to people
       const filteredResults = response.data.results.filter(item => item.media_type !== 'person');
 
-      setData((prev) => [...prev, ...filteredResults]);
+      if (page === 1) {
+        // Reset data when page is 1
+        setData(filteredResults);
+      } else {
+        // Append data for subsequent pages
+        setData(prev => [...prev, ...filteredResults]);
+      }
     } catch (error) {
       setError('Failed to load data.');
       console.error('Error fetching data:', error);
@@ -39,22 +45,21 @@ export default function SearchPage() {
 
   useEffect(() => {
     if (query) {
-      setPage(1);
-      setData([]);
-      fetchData();
+      setPage(1); // Reset page number
+      fetchData(); // Fetch data when query changes
     }
   }, [query]);
 
   useEffect(() => {
     if (page > 1) {
-      fetchData();
+      fetchData(); // Fetch data when page number changes
     }
   }, [page]);
 
   useEffect(() => {
     const handleScroll = () => {
       if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-        setPage((prev) => prev + 1);
+        setPage(prev => prev + 1);
       }
     };
 
@@ -86,7 +91,8 @@ export default function SearchPage() {
       </div>
     </div>
   );
-};
+}
+
 
 
 
