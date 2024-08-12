@@ -14,7 +14,7 @@ export interface BannerItem {
   overview: string;
   vote_average?: number; // Rating
   vote_count?: number; // Views
-  media_type?: 'movie' | 'tv'; // Media type
+  media_type?: 'movie' | 'tv' | 'person'; // Media type
 }
 
 export default function BannerBrowse() {

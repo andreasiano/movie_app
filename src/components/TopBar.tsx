@@ -10,7 +10,8 @@ interface TopBarProps {
 
 export default function TopBar({ toggleSidebar }: TopBarProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [searchInput, setSearchInput] = useState('');
+  const removeSpace = location?.search?.slice(3)?.split("%20")?.join(" ")
+  const [searchInput, setSearchInput] = useState(removeSpace);
   const navigate = useNavigate();
 
   useEffect(() => {

@@ -2,32 +2,44 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import GridCard from '../components/GridCard';
+import GridSkel from '../skeletons/GridSkel'; // Make sure you have this component
 import { BannerItem } from '../components/BannerBrowse';
 
-const SearchPage: React.FC = () => {
+export default function SearchPage() {
   const location = useLocation();
   const [data, setData] = useState<BannerItem[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState<number>(1);
 
   const query = new URLSearchParams(location.search).get('q') || '';
 
   const fetchData = async () => {
+    setLoading(true);
+    setError(null); // Reset error state
     try {
       const response = await axios.get<{ results: BannerItem[] }>(`search/multi`, {
         params: {
-          query,
-          page,
+          query: query,
+          page: page,
         },
       });
-      setData((prev) => [...prev, ...response.data.results]);
+
+      // Filter out results related to people
+      const filteredResults = response.data.results.filter(item => item.media_type !== 'person');
+
+      setData((prev) => [...prev, ...filteredResults]);
     } catch (error) {
+      setError('Failed to load data.');
       console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     if (query) {
-      setPage(2);
+      setPage(1);
       setData([]);
       fetchData();
     }
@@ -51,26 +63,33 @@ const SearchPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="">
+    <div className="h-full w-full">
       <div className="container mx-auto">
-       
         <div className="grid pb-10 grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {data.map((searchData) => (
-            <GridCard
-              data={searchData}
-              key={`${searchData.id}-search`}
-              media_type={searchData.media_type ?? 'default'}
-              trending={false}
-              index={0}
-            />
-          ))}
+          {loading
+            ? Array(12).fill(null).map((_, index) => (
+                <GridSkel key={index} />
+              ))
+            : error
+            ? <div className="text-red-500">{error}</div>
+            : data.map((item) => (
+                <GridCard
+                  key={item.id}
+                  data={item}
+                  media_type={item.media_type ?? 'default'}
+                  trending={false}
+                  index={item.id}
+                />
+              ))
+          }
         </div>
       </div>
     </div>
   );
 };
 
-export default SearchPage;
+
+
 
 
 
