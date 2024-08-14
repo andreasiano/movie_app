@@ -51,7 +51,7 @@ export default function Details() {
 
       {/* Title, Tagline, and Genres */}
       <div className="container mb-10">
-        <h2 className="text-3xl font-bold">{data.title || data.name}</h2>
+        <h2 className="lg:text-5xl text-3xl font-bold">{data.title || data.name}</h2>
         {data.tagline && <p className="text-lg italic text-gray-400 mt-2">{data.tagline}</p>}
         <div className="mt-4 flex flex-wrap gap-2">
           {data.genres.map((genre: any) => (
@@ -63,7 +63,7 @@ export default function Details() {
 
         {/* Ratings, Runtime, Vote Average, Vote Count */}
 
-        <p className="mt-4 lg:w-[800px] text-gray-500 font-custom-light text-lg">{data.overview}</p>
+        <p className="mt-4 lg:w-[800px] text-gray-500 font-custom-light text-xl lg:text-2xl">{data.overview}</p>
       </div>
         <div className="flex items-center mb-[50px] gap-6 text-gray-500">
           <div className="flex items-center">
