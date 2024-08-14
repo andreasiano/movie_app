@@ -3,7 +3,8 @@ import useFetchDetails from "../hooks/UseFetchDetails";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store/store";
 import { BannerItem } from "../components/BannerBrowse";
-import { FaClock, FaStar, FaThumbsUp } from "react-icons/fa";
+import { FaClock, FaStar, FaThumbsUp, FaTv } from "react-icons/fa";
+import { DiHtml5Multimedia } from "react-icons/di";
 
 export default function Details() {
   const params = useParams();
@@ -15,12 +16,16 @@ export default function Details() {
   const { data: castData } = useFetchDetails<any>(
     `/${params?.explore}/${params?.id}/credits`
   );
-  console.log(castData, 'cast');
-  console.log(data, 'data');
 
   if (!data) {
     return <div>Loading...</div>;
   }
+
+  console.log(castData, 'cast')
+  console.log(data, 'data')
+
+  const isMovie = 'runtime' in data;
+  const isTVSeries = 'number_of_episodes' in data && 'number_of_seasons' in data;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -29,7 +34,7 @@ export default function Details() {
           <img
             className="rounded-xl w-full h-full object-cover"
             src={imageUrl + data.backdrop_path}
-            alt="Movie backdrop"
+            alt={data.title || data.name}
           />
         </div>
         <div className="absolute rounded-xl w-full h-full top-0 bg-gradient-to-t from-neutral-900 to-transparent"></div>
@@ -40,7 +45,7 @@ export default function Details() {
           <img
             className="w-80 h-100 rounded-xl object-cover"
             src={imageUrl + data.poster_path}
-            alt="Movie poster"
+            alt={data.title || data.name}
           />
         </div>
       </div>
@@ -58,11 +63,26 @@ export default function Details() {
 
         <p className="mt-4 lg:w-[800px] text-gray-500 font-custom-light text-xl lg:text-2xl">{data.overview}</p>
       </div>
+
       <div className="flex items-center mb-[50px] gap-6 text-gray-500">
-        <div className="flex items-center">
-          <FaClock className="mr-2" />
-          <span>{data.runtime} min</span>
-        </div>
+        {isMovie && (
+          <div className="flex items-center">
+            <FaClock className="mr-2" />
+            <span>{data.runtime} min</span>
+          </div>
+        )}
+        {isTVSeries && (
+          <>
+            <div className="flex items-center">
+              <DiHtml5Multimedia className="mr-2"/>
+              <span>{data.number_of_episodes} episodes</span>
+            </div>
+            <div className="flex items-center">
+              <FaTv className="mr-2" />
+              <span>{data.number_of_seasons} seasons</span>
+            </div>
+          </>
+        )}
         <div className="flex items-center">
           <FaStar className="mr-2 text-yellow-500" />
           <span>{data.vote_average ? data.vote_average.toFixed(1) : 'N/A'} / 10</span>
@@ -75,6 +95,7 @@ export default function Details() {
     </div>
   );
 }
+
 
 
 

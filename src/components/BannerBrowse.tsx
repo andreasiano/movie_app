@@ -8,6 +8,8 @@ export interface BannerItem {
   release_date: string;
   tagline: string
   id: number;
+  number_of_episodes: number,
+  number_of_seasons: number,
   genres: string[]
   runtime: number
   backdrop_path: string;
