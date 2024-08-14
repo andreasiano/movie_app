@@ -40,7 +40,7 @@ export default function Details() {
         <div className="absolute rounded-xl w-full h-full top-0 bg-gradient-to-t from-neutral-900 to-transparent"></div>
       </div>
 
-      <div className="container px-10 flex-grow">
+      <div className="container px-10">
         <div className="relative mx-auto lg:ml-0 w-fit -mt-[450px] mb-10">
           <img
             className="w-80 h-100 rounded-xl object-cover"
