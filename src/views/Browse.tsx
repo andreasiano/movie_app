@@ -18,7 +18,7 @@ export default function Browse() {
       <HorizontalScroll title="Trending" data={trendingData} media_type=""/>
       <HorizontalScroll title="Top Rated" data={topRatedData} media_type="movie"/>
       <HorizontalScroll title="Now Playing" data={[...nowPlayingData].reverse()} media_type="movie"/>
-      <HorizontalScroll title="Popular" data={[...popularData].reverse()} media_type="tv" />
+      <HorizontalScroll title="Popular" data={[...popularData].reverse()} media_type="movie" />
       <HorizontalScroll title="Trending Series" data={tvAiringTodayData} media_type="tv" />
       <HorizontalScroll title="Popular Series" data={popularTvData}media_type="tv" />
     </div>
