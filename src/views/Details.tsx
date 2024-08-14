@@ -50,7 +50,7 @@ export default function Details() {
         </div>
       </div>
 
-      <div className="container mb-10">
+      <div className="container lg:mt-0 mt-5 mb-10">
         <h2 className="lg:text-5xl text-3xl font-bold">{data.title || data.name}</h2>
         {data.tagline && <p className="text-lg italic text-gray-400 mt-2">{data.tagline}</p>}
         <div className="mt-4 flex flex-wrap gap-2">
