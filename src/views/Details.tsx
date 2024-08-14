@@ -3,8 +3,6 @@ import useFetchDetails from "../hooks/UseFetchDetails";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store/store";
 import { BannerItem } from "../components/BannerBrowse";
-
-// Import React Icons
 import { FaClock, FaStar, FaThumbsUp } from "react-icons/fa";
 
 export default function Details() {
@@ -26,7 +24,6 @@ export default function Details() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Backdrop Image Container */}
       <div className="w-full h-[480px] relative">
         <div className="w-full h-full">
           <img
@@ -38,7 +35,6 @@ export default function Details() {
         <div className="absolute rounded-xl w-full h-full top-0 bg-gradient-to-t from-neutral-900 to-transparent"></div>
       </div>
 
-      {/* Poster Image and Text Container */}
       <div className="container px-10 flex-grow">
         <div className="relative mx-auto lg:ml-0 w-fit -mt-[450px] mb-10">
           <img
@@ -49,7 +45,6 @@ export default function Details() {
         </div>
       </div>
 
-      {/* Title, Tagline, and Genres */}
       <div className="container mb-10">
         <h2 className="lg:text-5xl text-3xl font-bold">{data.title || data.name}</h2>
         {data.tagline && <p className="text-lg italic text-gray-400 mt-2">{data.tagline}</p>}
@@ -61,24 +56,22 @@ export default function Details() {
           ))}
         </div>
 
-        {/* Ratings, Runtime, Vote Average, Vote Count */}
-
         <p className="mt-4 lg:w-[800px] text-gray-500 font-custom-light text-xl lg:text-2xl">{data.overview}</p>
       </div>
-        <div className="flex items-center mb-[50px] gap-6 text-gray-500">
-          <div className="flex items-center">
-            <FaClock className="mr-2" />
-            <span>{data.runtime} min</span>
-          </div>
-          <div className="flex items-center">
-            <FaStar className="mr-2 text-yellow-500" />
-            <span>{data.vote_average.toFixed(1)} / 10</span>
-          </div>
-          <div className="flex items-center">
-            <FaThumbsUp className="mr-2" />
-            <span>{data.vote_count}</span>
-          </div>
+      <div className="flex items-center mb-[50px] gap-6 text-gray-500">
+        <div className="flex items-center">
+          <FaClock className="mr-2" />
+          <span>{data.runtime} min</span>
         </div>
+        <div className="flex items-center">
+          <FaStar className="mr-2 text-yellow-500" />
+          <span>{data.vote_average ? data.vote_average.toFixed(1) : 'N/A'} / 10</span>
+        </div>
+        <div className="flex items-center">
+          <FaThumbsUp className="mr-2" />
+          <span>{data.vote_count ?? 'N/A'}</span>
+        </div>
+      </div>
     </div>
   );
 }

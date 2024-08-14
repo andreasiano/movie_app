@@ -6,7 +6,10 @@ import BannerSkel from "../skeletons/BannerSkel";
 
 export interface BannerItem {
   release_date: string;
+  tagline: string
   id: number;
+  genres: string[]
+  runtime: number
   backdrop_path: string;
   poster_path: string;
   title?: string;
