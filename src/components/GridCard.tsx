@@ -23,9 +23,18 @@ export default function Card({ data, trending, index, media_type }: CardProps) {
   const formattedDate = moment(data.release_date).format('MMMM Do, YYYY');
   const [isLiked, setIsLiked] = useState(false);
 
-  const handleHeartClick = () => {
-    setIsLiked(!isLiked);
+  const handleHeartClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setIsLiked(true);
+
+    // Set a timer to turn the heart back to white after 1 second (1000 ms)
+    setTimeout(() => {
+      setIsLiked(false);
+    }, 500); // You can adjust the delay time as needed
   };
+  
   return (
     <Link to={"/"+mediaType+"/"+data.id} className="relative bg-gray-800 bg-opacity-20 rounded-xl">
       <img src={fullImageUrl} alt={data.title || data.name} className="rounded-xl opacity-80" />

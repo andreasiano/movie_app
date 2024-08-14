@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { CanceledError } from "axios";
 import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import GridCard from "../components/GridCard";
@@ -14,17 +14,20 @@ export default function Explore() {
   const containerRef = useRef<HTMLDivElement>(null);
   const isFetching = useRef<boolean>(false); // Track fetching state
 
-  const fetchData = async (page: number) => {
+  const fetchData = async (page: number, controller: AbortController) => {
     setLoading(true);
     setError(null);
+
     try {
       const response = await axios.get(`/discover/${explore}`, {
         params: { page },
+        signal: controller.signal, // Pass the AbortController signal to the request
       });
       console.log("API response:", response.data);
       setData((prevData) => [...prevData, ...response.data.results]);
       setTotalPages(response.data.total_pages);
     } catch (error) {
+      if (error instanceof CanceledError) return; // Ignore if the request was canceled
       setError('Failed to load data.');
       console.error('Error fetching data:', error);
     } finally {
@@ -38,12 +41,12 @@ export default function Explore() {
     if (container) {
       const { scrollTop, clientHeight, scrollHeight } = container;
       if (scrollHeight - scrollTop <= clientHeight + 50 && !loading && !isFetching.current) {
-        // Near bottom of the page and not already fetching data
         isFetching.current = true; // Set fetching state
         setCurrentPage((prevPage) => {
           const nextPage = prevPage + 1;
           if (nextPage <= totalPages) {
-            fetchData(nextPage);
+            const controller = new AbortController(); // Create a new AbortController
+            fetchData(nextPage, controller); // Pass the controller to the fetch function
             return nextPage;
           }
           return prevPage; // Don't change page if already at the end
@@ -59,7 +62,14 @@ export default function Explore() {
     setData([]);
     setCurrentPage(1);
     setTotalPages(1);
-    fetchData(1); // Fetch data for the initial page
+
+    const controller = new AbortController(); // Create a new AbortController
+    fetchData(1, controller); // Fetch data for the initial page
+
+    // Cleanup function to cancel the request when component unmounts or dependency changes
+    return () => {
+      controller.abort();
+    };
   }, [explore]);
 
   useEffect(() => {
@@ -103,6 +113,7 @@ export default function Explore() {
     </div>
   );
 }
+
 
 
 
