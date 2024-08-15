@@ -20,6 +20,7 @@ export interface BannerItem {
   vote_average?: number; // Rating
   vote_count?: number; // Views
   media_type?: 'movie' | 'tv' | 'person'; // Media type
+  origin_country: string
 }
 
 export default function BannerBrowse() {
