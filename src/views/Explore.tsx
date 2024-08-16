@@ -3,6 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import GridCard from "../components/GridCard";
 import GridSkel from "../skeletons/GridSkel";
+import ExploreSkel from "../skeletons/ExploreSkel";
 
 export default function Explore() {
   const { explore } = useParams<{ explore: string }>();
@@ -11,6 +12,8 @@ export default function Explore() {
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [selectedBackdrop, setSelectedBackdrop] = useState<string | null>(null); // State for the selected backdrop
+  const [contentType, setContentType] = useState<string>(''); // State for the content type
   const containerRef = useRef<HTMLDivElement>(null);
   const isFetching = useRef<boolean>(false); // Track fetching state
 
@@ -24,7 +27,25 @@ export default function Explore() {
         signal: controller.signal, // Pass the AbortController signal to the request
       });
       console.log("API response:", response.data);
-      setData((prevData) => [...prevData, ...response.data.results]);
+      setData((prevData) => {
+        const newData = [...prevData, ...response.data.results];
+
+        // Extract valid backdrop paths from newData
+        const validBackdropPaths = newData
+          .filter((item) => item.backdrop_path) // Ensure backdrop_path exists
+          .map((item) => item.backdrop_path);
+
+        // Select a random backdrop for the new category
+        if (validBackdropPaths.length > 0) {
+          // Calculate daily seed using current date
+          const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD format
+          const seed = new Date(today).getDate(); // Use the day of the month as seed
+          const randomIndex = (seed % validBackdropPaths.length);
+          setSelectedBackdrop(validBackdropPaths[randomIndex]);
+        }
+
+        return newData;
+      });
       setTotalPages(response.data.total_pages);
     } catch (error) {
       if (error instanceof CanceledError) return; // Ignore if the request was canceled
@@ -62,6 +83,11 @@ export default function Explore() {
     setData([]);
     setCurrentPage(1);
     setTotalPages(1);
+    setSelectedBackdrop(null); // Reset the selected backdrop
+
+    // Determine content type based on explore parameter
+    const type = explore.includes('tv') ? 'TV Shows' : 'Movies';
+    setContentType(type);
 
     const controller = new AbortController(); // Create a new AbortController
     fetchData(1, controller); // Fetch data for the initial page
@@ -70,7 +96,7 @@ export default function Explore() {
     return () => {
       controller.abort();
     };
-  }, [explore]);
+  }, [explore]); // Dependency array includes `explore` to trigger fetch on change
 
   useEffect(() => {
     const container = containerRef.current;
@@ -84,6 +110,26 @@ export default function Explore() {
 
   return (
     <div ref={containerRef} className="h-full scrollbar-hide w-full overflow-auto">
+      {/* Banner Section */}
+      {loading ? (
+        <ExploreSkel /> // Show the skeleton loader with title while loading
+      ) : selectedBackdrop ? (
+        <div
+          className="relative rounded-lg w-full h-[80vh] bg-cover bg-center mb-8"
+          style={{
+            backgroundImage: `url(https://image.tmdb.org/t/p/original${selectedBackdrop})`,
+          }}
+        >
+          {/* Background overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-neutral-900 to-transparent z-10 flex items-center rounded-lg lg:align-middle p-8">
+            {/* Title text */}
+            <div className="text-white text-5xl font-bold">
+              {contentType}
+            </div>
+          </div>
+        </div>
+      ) : null}
+
       <div className="container">
         {/* Grid Container */}
         <div className="grid pb-10 grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -113,19 +159,6 @@ export default function Explore() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
