@@ -38,7 +38,7 @@ export default function Sidebar({ toggleSidebar }: SidebarProps) {
       id: 2,
       section: 'General',
       items: [
-        { id: 4, name: 'WatchList', icon: <CiViewList size={20} />, path: '/settings' },
+        { id: 4, name: 'WatchList', icon: <CiViewList size={20} />, path: '/watchlist' },
         { id: 5, name: 'Log Out', icon: <FaSignOutAlt size={20} />, path: '/logout' },
       ],
     },

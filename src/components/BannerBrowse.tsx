@@ -4,14 +4,14 @@ import { RootState } from '../redux/store/store';
 import { FaArrowLeft, FaArrowRight, FaStar, FaEye, FaFilm, FaTv } from 'react-icons/fa';
 import BannerSkel from "../skeletons/BannerSkel";
 
-export interface BannerItem {
+export interface MediaItem {
   release_date: string;
-  tagline: string
+  tagline: string;
   id: number;
-  number_of_episodes: number,
-  number_of_seasons: number,
-  genres: string[]
-  runtime: number
+  number_of_episodes: number;
+  number_of_seasons: number;
+  genres: string[];
+  runtime: number;
   backdrop_path: string;
   poster_path: string;
   title?: string;
@@ -20,11 +20,11 @@ export interface BannerItem {
   vote_average?: number; // Rating
   vote_count?: number; // Views
   media_type?: 'movie' | 'tv' | 'person'; // Media type
-  origin_country: string
+  origin_country: string;
 }
 
 export default function BannerBrowse() {
-  const bannerData = useSelector((state: RootState) => state.movieData.bannerData as BannerItem[]);
+  const bannerData = useSelector((state: RootState) => state.movieData.bannerData as MediaItem[]);
   const imageUrl = useSelector((state: RootState) => state.movieData.imageUrl);
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -129,19 +129,20 @@ export default function BannerBrowse() {
       </div>
       <button
         onClick={handlePrevImage}
-        className="absolute left-3 md:left-5 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full z-20"
+        className="absolute left-3 md:left-5 top-[60%] md:top-[55%] transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full z-20"
       >
         <FaArrowLeft />
       </button>
       <button
         onClick={handleNextImage}
-        className="absolute right-3 md:right-5 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full z-20"
+        className="absolute right-3 md:right-5 top-[60%] md:top-[55%] transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full z-20"
       >
         <FaArrowRight />
       </button>
     </section>
   );
 }
+
 
 
 

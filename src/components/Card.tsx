@@ -1,14 +1,13 @@
-import { useState } from 'react';
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store/store";
-import { BannerItem } from "../components/BannerBrowse";
+import { MediaItem } from "../components/BannerBrowse";
 import moment from 'moment';
 import { AiOutlineCalendar } from 'react-icons/ai';
-import { FaStar, FaHeart } from 'react-icons/fa';
+import { FaStar } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 interface CardProps {
-  data: BannerItem;
+  data: MediaItem;
   trending: boolean;
   index: number;
   media_type: string
@@ -21,19 +20,6 @@ export default function Card({ data, trending, index, media_type }: CardProps) {
   const mediaType = data.media_type ?? media_type
 
   const formattedDate = moment(data.release_date).format('MMMM Do, YYYY');
-  const [isLiked, setIsLiked] = useState(false);
-
-  const handleHeartClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    setIsLiked(true);
-
-    // Set a timer to turn the heart back to white after 1 second (1000 ms)
-    setTimeout(() => {
-      setIsLiked(false);
-    }, 500); // You can adjust the delay time as needed
-  };
 
   return (
     <Link to={"/"+mediaType+"/"+data.id} className="max-w-[280px] min-w-[280px] relative bg-gray-800 bg-opacity-20 rounded-xl">
@@ -46,12 +32,6 @@ export default function Card({ data, trending, index, media_type }: CardProps) {
         )}
       </div>
       <div className="absolute top-5 right-5">
-        <div
-          className={`p-2 border-white border-2 rounded-full ${isLiked ? 'bg-red-600' : 'bg-gray-700'} bg-opacity-30 backdrop-blur-md text-white cursor-pointer`}
-          onClick={handleHeartClick}
-        >
-          <FaHeart className={`${isLiked ? 'text-red-500' : 'text-white'}`} />
-        </div>
       </div>
       <div className="absolute bottom-0 w-full bg-slate-700 bg-opacity-30 backdrop-blur-md p-2 rounded-b-xl">
         <h2 className="text-xl text-ellipsis line-clamp-1 text-white">{data.title || data.name}</h2>

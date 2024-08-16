@@ -1,4 +1,4 @@
-import { BannerItem } from "../components/BannerBrowse";
+import { MediaItem } from "../components/BannerBrowse";
 import Card from "../components/Card";
 import { MdArrowBack, MdArrowForward } from "react-icons/md";
 import { useRef } from "react";
@@ -6,7 +6,7 @@ import ScrollSkel from "../skeletons/ScrollSkel";
 
 interface HorizontalScrollProps {
   title: string;
-  data: BannerItem[];
+  data: MediaItem[];
   isLoading?: boolean; // Add an isLoading prop to control the loading state
   media_type: string
 }

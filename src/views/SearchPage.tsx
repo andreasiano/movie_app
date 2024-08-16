@@ -3,11 +3,11 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import GridCard from '../components/GridCard';
 import GridSkel from '../skeletons/GridSkel'; // Ensure you have this component
-import { BannerItem } from '../components/BannerBrowse';
+import { MediaItem } from '../components/BannerBrowse';
 
 export default function SearchPage() {
   const location = useLocation();
-  const [data, setData] = useState<BannerItem[]>([]);
+  const [data, setData] = useState<MediaItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState<number>(1);
@@ -18,7 +18,7 @@ export default function SearchPage() {
     setLoading(true);
     setError(null); // Reset error state
     try {
-      const response = await axios.get<{ results: BannerItem[] }>(`search/multi`, {
+      const response = await axios.get<{ results: MediaItem[] }>(`search/multi`, {
         params: {
           query: query,
           page: page,

@@ -1,11 +1,11 @@
 import { useSelector } from "react-redux";
-import BannerBrowse, { BannerItem } from "../components/BannerBrowse";
+import BannerBrowse, { MediaItem } from "../components/BannerBrowse";
 import { RootState } from "../redux/store/store";
 import HorizontalScroll from "../components/HorizontalScroll";
 import useFetch from "../hooks/UseFetch";
 
 export default function Browse() {
-  const trendingData = useSelector((state: RootState) => state.movieData.bannerData as BannerItem[]);
+  const trendingData = useSelector((state: RootState) => state.movieData.bannerData as MediaItem[]);
   const {data: nowPlayingData} = useFetch('/movie/now_playing')
   const {data: popularData} = useFetch('/movie/popular')
   const {data: topRatedData} = useFetch('/movie/top_rated')

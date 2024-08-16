@@ -2,10 +2,10 @@ import { createBrowserRouter } from 'react-router-dom';
 import App from '../App';
 import Details from '../views/Details';
 import SearchPage from '../views/SearchPage';
-import Settings from '../views/Settings';
 import LogOut from '../views/LogOut';
 import Browse from '../views/Browse';
 import Explore from '../views/Explore';
+import Watchlist from '../views/WatchList';
 
 export const router = createBrowserRouter([
   {
@@ -21,8 +21,8 @@ export const router = createBrowserRouter([
         element: <SearchPage />
       },
       {
-        path: 'settings',
-        element: <Settings />
+        path: 'watchlist',
+        element: <Watchlist />
       },
       {
         path: 'logout',

@@ -148,6 +148,7 @@ export default function Explore() {
                   index={item.id}
                   trending={false}
                   media_type={explore ?? 'default'}
+                  isWatchlist={false} // Pass isWatchlist as false here
                 />
               ))
           }
@@ -159,6 +160,7 @@ export default function Explore() {
     </div>
   );
 }
+
 
 
 
