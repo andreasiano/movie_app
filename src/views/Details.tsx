@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import useFetchDetails from "../hooks/UseFetchDetails";
 import { useSelector, useDispatch } from "react-redux";
@@ -16,6 +17,10 @@ export default function Details() {
   const { explore, id } = useParams();
   const dispatch = useDispatch();
   const imageUrl = useSelector((state: RootState) => state.movieData.imageUrl);
+  const watchlist = useSelector((state: RootState) => state.movieData.watchlist);
+
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   const mediaType = explore === 'tv' ? 'tv' : 'movie'; // Determine media type from URL
   const { data } = useFetchDetails<MediaItem>(`/${mediaType}/${id}`);
@@ -50,7 +55,17 @@ export default function Details() {
       overview: "",
       origin_country: ""
     };
-    dispatch(addToWatchlist(item));
+
+    const alreadyInWatchlist = watchlist.some(watchlistItem => watchlistItem.id === item.id);
+
+    if (alreadyInWatchlist) {
+      setModalMessage("This item is already in your watchlist!");
+    } else {
+      dispatch(addToWatchlist(item));
+      setModalMessage("Added to Watchlist!");
+    }
+    setShowModal(true);
+    setTimeout(() => setShowModal(false), 1000); // Hide modal after 3 seconds
   };
 
   return (
@@ -176,9 +191,19 @@ export default function Details() {
           </div>
         </div>
       )}
+
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="bg-red-600 text-white p-4 rounded-lg shadow-lg transform translate-y-16">
+          <p>{modalMessage}</p>
+        </div>
+      </div>
+
+      )}
     </div>
   );
 }
+
 
 
 
