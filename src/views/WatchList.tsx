@@ -1,11 +1,10 @@
 // Watchlist.tsx
-import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/store/store";
 import GridCard from "../components/GridCard";
 import { removeFromWatchlist } from "../redux/slice/movieAppSlice"; 
 
-const Watchlist: React.FC = () => {
+export default function Watchlist(){
   const dispatch = useDispatch();
   const watchlist = useSelector(
     (state: RootState) => state.movieData.watchlist
@@ -37,6 +36,4 @@ const Watchlist: React.FC = () => {
     </div>
   );
 };
-
-export default Watchlist;
 

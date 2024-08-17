@@ -1,5 +1,4 @@
 // GridCard.tsx
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store/store';
 import moment from 'moment';
@@ -17,7 +16,7 @@ interface CardProps {
   onRemove?: () => void;
 }
 
-const GridCard: React.FC<CardProps> = ({ data, trending, index, media_type, isWatchlist, onRemove }) => {
+export default function GridCard({ data, trending, index, media_type, isWatchlist, onRemove }: CardProps){
   const imageUrl = useSelector((state: RootState) => state.movieData.imageUrl);
   const fullImageUrl = `${imageUrl}${data.poster_path}`;
   const formattedDate = moment(data.release_date).format('MMMM Do, YYYY');
@@ -56,8 +55,6 @@ const GridCard: React.FC<CardProps> = ({ data, trending, index, media_type, isWa
     </div>
   );
 };
-
-export default GridCard;
 
 
 
