@@ -1,11 +1,12 @@
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../redux/store/store";
+// GridCard.tsx
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store/store';
 import moment from 'moment';
 import { AiOutlineCalendar } from 'react-icons/ai';
-import { FaStar, FaTimes } from 'react-icons/fa';
+import { FaStar, FaTrash } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import { removeFromWatchlist } from "../redux/slice/movieAppSlice";
-import { MediaItem } from "./BannerBrowse";
+import { MediaItem } from './BannerBrowse';
 
 interface CardProps {
   data: MediaItem;
@@ -13,32 +14,25 @@ interface CardProps {
   index: number;
   media_type: string;
   isWatchlist?: boolean;
+  onRemove?: () => void;
 }
 
-export default function GridCard({ data, trending, index, media_type, isWatchlist }: CardProps) {
-  const dispatch = useDispatch();
+const GridCard: React.FC<CardProps> = ({ data, trending, index, media_type, isWatchlist, onRemove }) => {
   const imageUrl = useSelector((state: RootState) => state.movieData.imageUrl);
   const fullImageUrl = `${imageUrl}${data.poster_path}`;
-
   const formattedDate = moment(data.release_date).format('MMMM Do, YYYY');
-
-  const handleRemove = () => {
-    if (data.id) {
-      dispatch(removeFromWatchlist(data.id));
-    }
-  };
 
   return (
     <div className="relative bg-gray-800 bg-opacity-20 rounded-xl">
       <Link to={`/${media_type}/${data.id}`} className="block">
-        <img src={fullImageUrl} alt={data.title || data.name} className="rounded-xl opacity-80" />
+        <img src={fullImageUrl} alt={data.title || data.name} className="w-full h-auto rounded-xl opacity-80" />
       </Link>
-      {isWatchlist && (
+      {isWatchlist && onRemove && (
         <button
-          onClick={handleRemove}
-          className="absolute top-2 right-2 text-white bg-red-600 rounded-full p-1 hover:bg-red-700 transition"
+          onClick={onRemove}
+          className="absolute top-2 right-2 text-white bg-red-600 rounded-full p-2 hover:bg-red-700 transition"
         >
-          <FaTimes />
+          <FaTrash />
         </button>
       )}
       {trending && (
@@ -61,7 +55,13 @@ export default function GridCard({ data, trending, index, media_type, isWatchlis
       </div>
     </div>
   );
-}
+};
+
+export default GridCard;
+
+
+
+
 
 
 

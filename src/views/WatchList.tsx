@@ -1,33 +1,42 @@
-import { useSelector } from "react-redux";
-import GridCard from "../components/GridCard";
+// Watchlist.tsx
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/store/store";
-import { useParams } from "react-router-dom";
+import GridCard from "../components/GridCard";
+import { removeFromWatchlist } from "../redux/slice/movieAppSlice"; 
 
-export default function Watchlist() {
-  const { explore } = useParams<{ explore: string }>(); // Get explore parameter from URL
-  const watchlist = useSelector((state: RootState) => state.movieData.watchlist);
+const Watchlist: React.FC = () => {
+  const dispatch = useDispatch();
+  const watchlist = useSelector(
+    (state: RootState) => state.movieData.watchlist
+  );
+
+  const handleRemoveFromWatchlist = (id: number) => {
+    dispatch(removeFromWatchlist(id));
+  };
 
   return (
     <div className="container mb-10 mx-auto">
-      <h1 className="text-3xl font-bold mb-8">My Watchlist</h1>
-
-      {watchlist.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {watchlist.map((item) => (
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {watchlist.length === 0 ? (
+          <div className="text-gray-500">Your watchlist is empty.</div>
+        ) : (
+          watchlist.map((item) => (
             <GridCard
               key={item.id}
               data={item}
-              index={item.id} // Use item.id as a unique key
+              index={item.id}
               trending={false}
-              media_type={explore ?? (item.media_type ?? 'movie')} // Correctly handles media_type
+              media_type={item.media_type ?? "default"}
               isWatchlist={true}
+              onRemove={() => handleRemoveFromWatchlist(item.id)}
             />
-          ))}
-        </div>
-      ) : (
-        <p className="text-gray-500">Your watchlist is empty.</p>
-      )}
+          ))
+        )}
+      </div>
     </div>
   );
-}
+};
+
+export default Watchlist;
 

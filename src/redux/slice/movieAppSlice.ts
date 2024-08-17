@@ -1,46 +1,57 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { MediaItem } from '../../components/BannerBrowse';
 
 interface MovieAppState {
   bannerData: any[];
   imageUrl: string;
-  watchlist: MediaItem[]; // Add watchlist to state
+  watchlist: MediaItem[];
 }
+
+// Load initial state from localStorage or use empty array if not present
+const loadWatchlistFromLocalStorage = (): MediaItem[] => {
+  const savedWatchlist = localStorage.getItem('watchlist');
+  return savedWatchlist ? JSON.parse(savedWatchlist) : [];
+};
 
 const initialState: MovieAppState = {
   bannerData: [],
   imageUrl: '',
-  watchlist: JSON.parse(localStorage.getItem('watchlist') || '[]') // Load watchlist from localStorage
-}
+  watchlist: loadWatchlistFromLocalStorage(),
+};
+
+const saveWatchlistToLocalStorage = (watchlist: MediaItem[]) => {
+  localStorage.setItem('watchlist', JSON.stringify(watchlist));
+};
 
 export const movieAppSlice = createSlice({
   name: 'movieapp',
   initialState,
   reducers: {
     setBannerData: (state, action: PayloadAction<any[]>) => {
-      state.bannerData = action.payload
+      state.bannerData = action.payload;
     },
     setImageUrl: (state, action: PayloadAction<string>) => {
-      state.imageUrl = action.payload
+      state.imageUrl = action.payload;
     },
     addToWatchlist: (state, action: PayloadAction<MediaItem>) => {
-      // Check if item already exists in watchlist
-      const itemExists = state.watchlist.some(item => item.id === action.payload.id);
-      if (!itemExists) {
+      // Avoid adding duplicates
+      if (!state.watchlist.some(item => item.id === action.payload.id)) {
         state.watchlist.push(action.payload);
-        localStorage.setItem('watchlist', JSON.stringify(state.watchlist));
+        saveWatchlistToLocalStorage(state.watchlist);
       }
     },
     removeFromWatchlist: (state, action: PayloadAction<number>) => {
-      // Remove item from watchlist and save to localStorage
       state.watchlist = state.watchlist.filter(item => item.id !== action.payload);
-      localStorage.setItem('watchlist', JSON.stringify(state.watchlist));
-    }
-  }
-})
+      saveWatchlistToLocalStorage(state.watchlist);
+    },
+  },
+});
 
-export const { setBannerData, setImageUrl, addToWatchlist, removeFromWatchlist } = movieAppSlice.actions
+export const { setBannerData, setImageUrl, addToWatchlist, removeFromWatchlist } = movieAppSlice.actions;
 
-export default movieAppSlice.reducer
+export default movieAppSlice.reducer;
+
+
+
 
 
