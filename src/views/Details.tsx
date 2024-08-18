@@ -9,12 +9,13 @@ import { DiHtml5Multimedia } from "react-icons/di";
 import moment from "moment";
 import { AiOutlineCalendar } from "react-icons/ai";
 import { addToWatchlist } from "../redux/slice/movieAppSlice";
-import placeholder from "../assets/placeholder.webp"; // Adjust path as needed
+import placeholder from "../assets/placeholder.webp";
+import VideoPlay from "../components/VideoPlay";
 
 const placeholderImage = placeholder;
 
 export default function Details() {
-  const { explore, id } = useParams();
+  const { explore, id } = useParams<{ explore: string; id: string }>();
   const dispatch = useDispatch();
   const imageUrl = useSelector((state: RootState) => state.movieData.imageUrl);
   const watchlist = useSelector((state: RootState) => state.movieData.watchlist);
@@ -22,7 +23,10 @@ export default function Details() {
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
 
-  const mediaType = explore === 'tv' ? 'tv' : 'movie'; // Determine media type from URL
+  const [playVideo, setPlayVideo] = useState(false);
+  const [playVideoId, setPlayVideoId] = useState("");
+
+  const mediaType = explore === 'tv' ? 'tv' : 'movie';
   const { data } = useFetchDetails<MediaItem>(`/${mediaType}/${id}`);
   const { data: castData } = useFetchDetails<any>(`/${mediaType}/${id}/credits`);
 
@@ -36,7 +40,7 @@ export default function Details() {
   const isTVSeries = "number_of_episodes" in data && "number_of_seasons" in data;
 
   const director = castData?.crew.find((person: any) => person.known_for_department === "Directing");
-  const cast = castData?.cast.slice(0, 10) || []; // Display only the first 10 cast members
+  const cast = castData?.cast.slice(0, 10) || [];
 
   const handleAddToWatchlist = () => {
     const item: MediaItem = {
@@ -65,8 +69,14 @@ export default function Details() {
       setModalMessage("Added to Watchlist!");
     }
     setShowModal(true);
-    setTimeout(() => setShowModal(false), 1000); // Hide modal after 3 seconds
+    setTimeout(() => setShowModal(false), 1000);
   };
+
+  const handlePlayVideo = () => {
+    setPlayVideoId(data.id.toString()); // Convert the number to a string
+    setPlayVideo(true);
+  };
+  
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -144,8 +154,6 @@ export default function Details() {
           <span>{data.vote_count ?? "N/A"}</span>
         </div>
       </div>
-
-      {/* Buttons */}
       <div className="flex flex-col sm:flex-row sm:gap-4 gap-2 items-center mb-10">
         <button
           onClick={handleAddToWatchlist}
@@ -154,7 +162,7 @@ export default function Details() {
           <FaPlus />
           Add to Watchlist
         </button>
-        <button className="flex items-center transition duration-300 hover:bg-red-700 justify-center gap-2 bg-red-500 shadow-lg shadow-red-900 text-white px-4 py-4 rounded-xl w-full sm:w-auto">
+        <button onClick={handlePlayVideo} className="flex items-center transition duration-300 hover:bg-red-700 justify-center gap-2 bg-red-500 shadow-lg shadow-red-900 text-white px-4 py-4 rounded-xl w-full sm:w-auto">
           <FaPlay />
           Play Now
         </button>
@@ -194,15 +202,19 @@ export default function Details() {
 
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-        <div className="bg-red-600 text-white p-4 rounded-lg shadow-lg transform translate-y-16">
-          <p>{modalMessage}</p>
+          <div className="bg-red-600 text-white p-4 rounded-lg shadow-lg transform translate-y-16">
+            <p>{modalMessage}</p>
+          </div>
         </div>
-      </div>
+      )}
 
+      {playVideo && (
+        <VideoPlay data={{ id: playVideoId }} close={() => setPlayVideo(false)} media_type={mediaType} />
       )}
     </div>
   );
 }
+
 
 
 

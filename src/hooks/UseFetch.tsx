@@ -1,23 +1,31 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 
-const useFetch = (endpoint: string) => {
-  const [data, setData] = useState([]);
+const useFetch = (fetchFunction: () => Promise<any>) => {
+  const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const fetchData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(endpoint);
-      setLoading(false);
+      setError(null); // Reset error before a new request
+      const response = await fetchFunction();
       setData(response.data.results);
-    } catch (error) {
-      console.error("Failed to fetch now playing data:", error);
+    } catch (error: any) {
+      console.error("Failed to fetch data:", error);
+      setError(error.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchData();
-  }, []);
-  return { data, loading };
+  }, [fetchFunction]); // Add fetchFunction as a dependency
+
+  return { data, loading, error };
 };
 
 export default useFetch;
+
+

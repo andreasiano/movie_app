@@ -1,7 +1,7 @@
 // Watchlist.tsx
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/store/store";
-import GridCard from "../components/GridCard";
+import GridCard from "../components/Grid";
 import { removeFromWatchlist } from "../redux/slice/movieAppSlice"; 
 
 export default function Watchlist(){

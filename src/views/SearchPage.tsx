@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import GridCard from '../components/GridCard';
+import GridCard from '../components/Grid';
 import GridSkel from '../skeletons/GridSkel'; // Ensure you have this component
 import { MediaItem } from '../components/BannerBrowse';
 
