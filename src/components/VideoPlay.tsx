@@ -8,7 +8,7 @@ interface VideoPlayProps {
   media_type: string;
 }
 
-const VideoPlay: React.FC<VideoPlayProps> = ({ data, close, media_type }) => {
+export default function VideoPlay({ data, close, media_type }: VideoPlayProps){
   const { data: videoData, loading, error } = useFetchDetails<{ results: { key: string }[] }>(`/${media_type}/${data.id}/videos`);
 
   if (loading) return <div>Loading...</div>;
@@ -39,6 +39,5 @@ const VideoPlay: React.FC<VideoPlayProps> = ({ data, close, media_type }) => {
   );
 };
 
-export default VideoPlay;
 
 
