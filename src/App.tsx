@@ -1,5 +1,4 @@
 // src/App.tsx
-
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom'; // Import useLocation for routing
 import Sidebar from './components/Sidebar';

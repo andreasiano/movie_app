@@ -1,0 +1,36 @@
+[33m9e2ff5e[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m Modal added
+[33m3ead315[m Fixing export functions
+[33m931d8ae[m Fixing watchlist issue
+[33mb876ad7[m Getting mad for a fucking bug!!!!!!!!!
+[33m3bd79cf[m Adding banners for tv shows and movies
+[33m1aa9161[m Adding cast
+[33m8190e14[m Fixing layout on ipad
+[33md978f80[m Fixing margin on small devices
+[33md9ebb6a[m fixing movies params for popular section
+[33m96bfdd9[m Fixing season icons
+[33m1c48779[m Try fixing the details not appearing
+[33m990f479[m Adding new details
+[33me22e09d[m Adding Detail Page
+[33ma741e16[m Adding a heart icon delay
+[33m61e9ecd[m Fixing movies not fetched
+[33m0578520[m Fixing troubles with the search functionality
+[33m9f354d5[m Fixing search query
+[33mb9bdafa[m Adding search page
+[33m224f8ee[m Disabling fade effect on mobilee view
+[33m175775f[m Fixing flickering issue on mobile view
+[33mbc08ef1[m Fixing fade effect for images
+[33mb661099[m Fixing close icon not showing
+[33m1ed51c8[m Adding a modal
+[33mc673a6d[m Fixing font weight
+[33m5260054[m Fixing carousel card bug
+[33mdd48377[m Fixing delay on banner section
+[33ma9fa93d[m Removing html class
+[33mc418b93[m Getting mad while navigating
+[33m68798fa[m Adding new skeleton
+[33m769522b[m Add a version.json file to handle navigation
+[33m79c5362[m Removing col
+[33m7374231[m Removing title
+[33ma2c7ad5[m Adding Skeletons for loading time
+[33m64c6bb4[m Fixing cols on cards
+[33mc8d37bf[m Remove handleBulletClick
+[33md4c3298[m New Application

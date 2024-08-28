@@ -6,7 +6,6 @@ import LogOut from '../views/LogOut';
 import Browse from '../views/Browse';
 import Explore from '../views/Explore';
 import Watchlist from '../views/WatchList';
-import Profile from '../views/Profile';
 
 export const router = createBrowserRouter([
   {
@@ -16,10 +15,6 @@ export const router = createBrowserRouter([
       {
         path: 'browse',
         element: <Browse />
-      },
-      {
-        path: 'profile', // Add the profile route
-        element: <Profile />
       },
       {
         path: 'searchpage',

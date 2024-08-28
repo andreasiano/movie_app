@@ -1,11 +1,8 @@
-// src/components/TopBar.tsx
 import { FaBars, FaSearch } from 'react-icons/fa';
 import user from '../assets/user.jpg';
-import { useSelector } from 'react-redux'; // Import useSelector
-import { RootState } from '../redux/store/store'; // Adjust the path based on your structure
-import SearchModal from './SearchModal'; // Import the modal component
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
+import SearchModal from './SearchModal'; // Import the modal component
 
 interface TopBarProps {
   toggleSidebar: () => void;
@@ -13,18 +10,26 @@ interface TopBarProps {
 
 export default function TopBar({ toggleSidebar }: TopBarProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const navigate = useNavigate(); // Initialize navigate
+  const removeSpace = location?.search?.slice(3)?.split("%20")?.join(" ");
+  const [searchInput, setSearchInput] = useState(removeSpace);
+  const navigate = useNavigate();
 
-  // Get the user's name from Redux store
-  const userName = useSelector((state: RootState) => state.user.user?.name) || "Guest"; // Default to "Guest"
+  useEffect(() => {
+    if (searchInput) {
+      navigate(`/search?q=${searchInput}`);
+    }
+  }, [searchInput, navigate]);
+
+  const handleSearch = (query: string) => {
+    setSearchInput(query); // Update the search input which triggers navigation
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput(e.target.value);
+  };
 
   const handleButtonClick = () => {
     setIsModalOpen(true);
-  };
-
-  // Navigate to the profile page when clicking on the user image
-  const handleProfileClick = () => {
-    navigate('/profile'); // Adjust the path based on your routing
   };
 
   return (
@@ -38,6 +43,7 @@ export default function TopBar({ toggleSidebar }: TopBarProps) {
         {/* Middle section: Search field */}
         <div className="flex-1 relative">
           <form className="flex items-center" action="" onSubmit={(e) => e.preventDefault()}>
+            {/* Search icon for screens below 645px */}
             <button
               className="block sm:hidden"
               onClick={handleButtonClick}
@@ -45,24 +51,26 @@ export default function TopBar({ toggleSidebar }: TopBarProps) {
             >
               <FaSearch size={20} className="text-white" />
             </button>
+            {/* Search input field for screens 645px and above */}
             <input
               className="hidden sm:block sm:w-[300px] xs:w-[100px] pl-10 pr-10 py-2 border-2 border-red-200 opacity-30 rounded-[15px] bg-gray-800 outline-none text-white placeholder-gray-200 font-custom-light"
               type="text"
               placeholder="Search..."
-              // Add your search handling logic here
+              onChange={handleChange}
+              value={searchInput}
             />
           </form>
         </div>
 
         {/* Right section: Icons and Profile */}
         <div className="flex items-center space-x-4">
-          <div className="flex w-100 items-center space-x-2" onClick={handleProfileClick}>
+          <div className="flex w-100 items-center space-x-2">
             <img
-              className="h-10 w-10 border-2 bg-contain border-red-500 rounded-full cursor-pointer" // Added cursor pointer
+              className="h-10 w-10 border-2 bg-contain border-red-500 rounded-full"
               src={user}
               alt="Profile"
             />
-            <span className="text-white">Hey, {userName}</span> {/* Display user's name */}
+            <span className="text-white">Hey, Andrew</span>
           </div>
         </div>
       </div>
@@ -71,7 +79,7 @@ export default function TopBar({ toggleSidebar }: TopBarProps) {
       <SearchModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSearch={(query) => console.log(query)} // Handle search query
+        onSearch={handleSearch}
       />
     </>
   );
