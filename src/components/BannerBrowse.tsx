@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { RootState } from '../redux/store/store';
 import { FaArrowLeft, FaArrowRight, FaStar, FaEye, FaFilm, FaTv } from 'react-icons/fa';
 import BannerSkel from "../skeletons/BannerSkel";
+import VideoPlay from "../components/VideoPlay"; // Import your VideoPlay component
 
 export interface MediaItem {
   release_date: string;
@@ -31,6 +32,8 @@ export default function BannerBrowse() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [nextIndex, setNextIndex] = useState(0); // To preload the next image
   const [isMobile, setIsMobile] = useState(false); // To detect mobile devices
+  const [showVideoPlayer, setShowVideoPlayer] = useState(false); // Manage video player visibility
+  const [videoData, setVideoData] = useState<{ id: string; media_type: string } | null>(null); // Video data
 
   useEffect(() => {
     const checkIfMobile = () => setIsMobile(window.innerWidth <= 768);
@@ -69,6 +72,13 @@ export default function BannerBrowse() {
         setCurrentIndex((prevIndex) => (prevIndex - 1 + bannerData.length) % bannerData.length);
         setIsTransitioning(false);
       }, 500); // Wait for fade-out before changing the content
+    }
+  };
+
+  const handleWatchButtonClick = () => {
+    if (bannerData && bannerData[currentIndex]) {
+      setVideoData({ id: bannerData[currentIndex].id.toString(), media_type: bannerData[currentIndex].media_type || 'movie' });
+      setShowVideoPlayer(true);
     }
   };
 
@@ -125,7 +135,12 @@ export default function BannerBrowse() {
             <span className="ml-2">{currentBanner.media_type === 'movie' ? 'Movie' : 'TV Show'}</span>
           </div>
         </div>
-        <button className="bg-red-500 shadow-lg shadow-red-900 rounded-xl px-10 py-3 mt-5">Watch</button>
+        <button
+          onClick={handleWatchButtonClick}
+          className="bg-red-500 shadow-lg shadow-red-900 rounded-xl px-10 py-3 mt-5"
+        >
+          Watch
+        </button>
       </div>
       <button
         onClick={handlePrevImage}
@@ -139,9 +154,19 @@ export default function BannerBrowse() {
       >
         <FaArrowRight />
       </button>
+
+      {/* Render VideoPlay component */}
+      {showVideoPlayer && videoData && (
+        <VideoPlay
+          data={videoData}
+          close={() => setShowVideoPlayer(false)}
+          media_type={videoData.media_type}
+        />
+      )}
     </section>
   );
 }
+
 
 
 

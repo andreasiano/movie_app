@@ -1,7 +1,7 @@
 import axios, { CanceledError } from "axios";
 import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
-import GridCard from "../components/GridCard";
+import GridCard from "../components/Grid";
 import GridSkel from "../skeletons/GridSkel";
 import ExploreSkel from "../skeletons/ExploreSkel";
 

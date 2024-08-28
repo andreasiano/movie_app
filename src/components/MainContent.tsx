@@ -7,6 +7,7 @@ import Details from '../views/Details';
 import SearchPage from '../views/SearchPage';
 import Explore from '../views/Explore';
 import Watchlist from '../views/WatchList';
+import Profile from '../views/Profile';
 
 interface MainContentProps {
   toggleSidebar: () => void;
@@ -23,6 +24,7 @@ const MainContent: React.FC<MainContentProps> = ({ toggleSidebar }) => {
           <Route path="watchlist" element={<Watchlist />} />
           <Route path=":explore" element={<Explore />} />
           <Route path="logout" element={<LogOut />} />
+          <Route path="profile" element={<Profile />} />
           <Route path=":explore/:id" element={<Details />} />
           <Route path="search" element={<SearchPage />} />
           <Route path="*" element={<Browse />} />
