@@ -9,9 +9,6 @@ import SignUp from './views/SignUp'; // Import SignUp component
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setBannerData, setImageUrl } from './redux/slice/movieAppSlice';
-import SignIn from './views/SignIn';
-import SignUp from './views/SignUp';
-import Landing from './views/Landing';
 
 export default function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -48,11 +45,6 @@ export default function App() {
   // Determine if the current path is for sign in or sign up
   const isAuthPage = location.pathname === '/signin' || location.pathname === '/signup';
 
-  // Determine if we are on the landing page, sign in, or sign up pages
-  const isLandingPage = 
-    location.pathname === '/' || 
-    location.pathname === '/signup' || 
-    location.pathname === '/signin';
 
   return (
     <div className="flex h-[100vh] overflow-hidden bg-custom-bg font-custom-medium">
