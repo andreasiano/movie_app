@@ -1,31 +1,38 @@
-// src/views/Landing.tsx
-
 import { useNavigate } from 'react-router-dom';
 
 export default function Landing() {
   const navigate = useNavigate();
 
+  const handleSignIn = () => {
+    navigate('/signin');
+  };
+
+  const handleSignUp = () => {
+    navigate('/signup');
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center h-full bg-custom-bg text-white">
-      <h1 className="text-4xl font-bold mb-4">Welcome to Our Movie App</h1>
-      <p className="text-lg mb-8">Discover and manage your favorite movies!</p>
-      <button 
-        onClick={() => navigate('/signup')}  // Navigate to Sign Up instead of Sign In
-        className="bg-blue-500 text-white py-2 px-4 rounded"
-      >
-        Get Started
-      </button>
-      <div className="mt-4">
-        <p>Already a member?</p>
-        <span 
-          onClick={() => navigate('/signin')} 
-          className="text-blue-500 cursor-pointer"
+    <div className="flex flex-col items-center justify-center h-screen bg-landing-bg">
+      <h1 className="text-5xl font-bold text-white mb-6">Unlimited movies, TV shows, and more.</h1>
+      <p className="text-2xl text-white mb-6">Watch anywhere. Cancel anytime.</p>
+      <p className="text-xl text-white mb-8">Ready to watch? Enter your email to create or restart your membership.</p>
+      <div className="flex space-x-4">
+        <button 
+          onClick={handleSignIn} 
+          className="px-6 py-2 bg-red-600 text-white font-bold rounded-md hover:bg-red-700"
         >
           Sign In
-        </span>
+        </button>
+        <button 
+          onClick={handleSignUp} 
+          className="px-6 py-2 bg-blue-600 text-white font-bold rounded-md hover:bg-blue-700"
+        >
+          Sign Up
+        </button>
       </div>
     </div>
   );
 }
+
 
 
