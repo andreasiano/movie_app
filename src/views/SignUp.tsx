@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai"; // Import eye icons from react-icons
 
 interface FormData {
@@ -14,12 +15,13 @@ export default function SignUp() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [error, setError] = useState("");
 
   const {
     register,
     handleSubmit,
     watch,
-    setError,
+    setError: setFormError,
     clearErrors,
     formState: { errors },
   } = useForm<FormData>();
@@ -27,21 +29,27 @@ export default function SignUp() {
   const password = watch("password");
   const confirmPassword = watch("confirmPassword");
 
-  const onSubmit = (data: FormData) => {
-    console.log("Sign-up data:", data);
-    navigate("/signin"); // Navigate to Sign In after successful sign-up
-  };
-
   useEffect(() => {
     if (password !== confirmPassword) {
-      setError("confirmPassword", {
+      setFormError("confirmPassword", {
         type: "manual",
         message: "Passwords do not match",
       });
     } else {
       clearErrors("confirmPassword");
     }
-  }, [password, confirmPassword, setError, clearErrors]);
+  }, [password, confirmPassword, setFormError, clearErrors]);
+
+  const onSubmit = async (data: FormData) => {
+    const auth = getAuth();
+    try {
+      await createUserWithEmailAndPassword(auth, data.email, data.password);
+      navigate("/signin"); // Navigate to Sign In after successful sign-up
+    } catch (error) {
+      setError("Failed to sign up. Please try again.");
+      console.error("Sign-Up Error:", error);
+    }
+  };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -55,6 +63,7 @@ export default function SignUp() {
     <div className="flex items-center justify-center h-full">
       <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-md rounded">
         <h2 className="text-2xl font-bold text-center">Sign Up</h2>
+        {error && <p className="text-red-500 text-center">{error}</p>}
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* Username Field */}
           <div className="mb-4">
