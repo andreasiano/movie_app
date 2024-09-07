@@ -121,7 +121,7 @@ export default function SignUp() {
                   },
                   pattern: {
                     value:
-                      /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/,
+                      /^(?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>~`])[a-zA-Z0-9!@#$%^&*(),.?":{}|<>~`]{8,}$/,
                     message:
                       "Password must contain at least one number and one special character",
                   },
