@@ -6,6 +6,7 @@ import LogOut from '../views/LogOut';
 import Browse from '../views/Browse';
 import Explore from '../views/Explore';
 import Watchlist from '../views/WatchList';
+import ProtectedRoute from '../routes/protectedRoute'; // Adjust the path as necessary
 
 export const router = createBrowserRouter([
   {
@@ -18,24 +19,40 @@ export const router = createBrowserRouter([
       },
       {
         path: 'searchpage',
-        element: <SearchPage />
-      },
-      {
-        path: 'watchlist',
-        element: <Watchlist />
+        element: (
+          <ProtectedRoute>
+            <SearchPage />
+          </ProtectedRoute>
+        )
       },
       {
         path: 'logout',
         element: <LogOut />
       },
       {
-        path : ":explore",
-        element : <Explore/>
-    },
-    {
-        path : ":explore/:id",
-        element : <Details/>
-    },
+        path: 'watchlist',
+        element: (
+          <ProtectedRoute>
+            <Watchlist />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: ":explore",
+        element: (
+          <ProtectedRoute>
+            <Explore />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: ":explore/:id",
+        element: (
+          <ProtectedRoute>
+            <Details />
+          </ProtectedRoute>
+        )
+      },
       {
         path: '*',
         element: <Browse />
@@ -43,3 +60,4 @@ export const router = createBrowserRouter([
     ]
   }
 ]);
+

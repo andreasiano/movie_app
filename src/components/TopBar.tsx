@@ -1,8 +1,10 @@
 import { FaBars, FaSearch } from 'react-icons/fa';
-import user from '../assets/user.jpg';
+import user from '../assets/placeholder.webp'; // Placeholder image for profile
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import SearchModal from './SearchModal'; // Import the modal component
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../firebase/firebase"; // Your Firebase auth setup
 
 interface TopBarProps {
   toggleSidebar: () => void;
@@ -10,24 +12,41 @@ interface TopBarProps {
 
 export default function TopBar({ toggleSidebar }: TopBarProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const removeSpace = location?.search?.slice(3)?.split("%20")?.join(" ");
-  const [searchInput, setSearchInput] = useState(removeSpace);
+  const [searchInput, setSearchInput] = useState('');
+  const [username, setUsername] = useState<string | null>(null);
   const navigate = useNavigate();
 
+  // Use effect to listen for authentication state changes
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUsername(user.displayName); // Set the username from the user object 
+      } else {
+        setUsername(null); // Clear the username if not authenticated
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup the subscription
+  }, []);
+
+  // Handle navigation based on search input
   useEffect(() => {
     if (searchInput) {
       navigate(`/search?q=${searchInput}`);
     }
   }, [searchInput, navigate]);
 
+  // Function to handle search
   const handleSearch = (query: string) => {
     setSearchInput(query); // Update the search input which triggers navigation
   };
 
+  // Function to handle changes in the search input field
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(e.target.value);
   };
 
+  // Function to open the search modal
   const handleButtonClick = () => {
     setIsModalOpen(true);
   };
@@ -70,7 +89,7 @@ export default function TopBar({ toggleSidebar }: TopBarProps) {
               src={user}
               alt="Profile"
             />
-            <span className="text-white">Hey, Andrew</span>
+            <span className="text-white">Hey, {username ? username : 'Guest'}</span>
           </div>
         </div>
       </div>
@@ -84,6 +103,9 @@ export default function TopBar({ toggleSidebar }: TopBarProps) {
     </>
   );
 }
+
+
+
 
 
 

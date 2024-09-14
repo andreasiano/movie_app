@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
-import img from '../assets/Screenshot 2024-09-07 215002.png'; // Ensure the path is correct
+import img from '../assets/signin.png'; // Ensure the path is correct
 import { auth } from "../firebase/firebase"; // Import auth from the initialized firebase file
 import {
   signInWithPopup,
@@ -61,7 +61,7 @@ export default function SignIn() {
       {/* Left Container */}
       <div className="w-full md:w-1/2 h-full flex flex-col items-center justify-center rounded-xl p-6 relative">
         {/* Welcome Back Title */}
-        <h2 className="text-zinc-600 text-5xl mb-2">Welcome Back!</h2>
+        <h2 className="text-zinc-600 text-3xl lg:text-5xl mb-2">Welcome Back!</h2>
 
         {/* Subtitle for your movie app */}
         <p className="text-zinc-500 mb-6 text-center">Sign in to explore and enjoy the latest movies and shows.</p>

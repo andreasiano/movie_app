@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom'; // Import useLocation and useNavigate for routing
+import { useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import MainContent from './components/MainContent';
-import SignIn from './views/SignIn'; // Import SignIn component
-import SignUp from './views/SignUp'; // Import SignUp component
+import SignIn from './views/SignIn';
+import SignUp from './views/SignUp';
+import { auth } from './firebase/firebase'; // Firebase authentication instance
+import { onAuthStateChanged } from 'firebase/auth'; // Firebase auth state listener
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setBannerData, setImageUrl } from './redux/slice/movieAppSlice';
@@ -11,9 +13,10 @@ import { setBannerData, setImageUrl } from './redux/slice/movieAppSlice';
 export default function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // New loading state
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null); // Auth state
   const dispatch = useDispatch();
-  const location = useLocation(); // Get the current location
-  const navigate = useNavigate(); // Use navigate to redirect
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const fetchTrendingData = async () => {
     try {
@@ -33,24 +36,35 @@ export default function App() {
     }
   };
 
+  // Check user authentication status
   useEffect(() => {
-    fetchTrendingData();
-    fetchConfiguration();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsAuthenticated(true); // User is logged in
+      } else {
+        setIsAuthenticated(false); // User is not logged in
+        if (location.pathname !== '/signup') {
+          navigate('/signin'); // Redirect to sign-in if not logged in and not on sign-up page
+        }
+      }
+      setIsLoading(false); // Stop loading when auth state is determined
+    });
 
-    // Check if the user is already on the sign-in page
-    if (location.pathname === '/') {
-      navigate('/signin'); // Redirect to SignIn page if at root
+    // Cleanup the listener when component unmounts
+    return () => unsubscribe();
+  }, [location.pathname, navigate]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchTrendingData();
+      fetchConfiguration();
     }
-
-    // Set loading to false after navigation check
-    setIsLoading(false);
-  }, [dispatch, location.pathname, navigate]);
+  }, [isAuthenticated]);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  // Determine if the current path is for sign in or sign up
   const isAuthPage = location.pathname === '/signin' || location.pathname === '/signup';
 
   // If loading, return null or a loading spinner
@@ -65,34 +79,39 @@ export default function App() {
       }`}
     >
       {/* Render Sidebar only if not on Auth pages */}
-      {!isAuthPage && (
+      {!isAuthPage && isAuthenticated && (
         <>
           <div className="hidden md:block md:w-64">
             <Sidebar toggleSidebar={() => {}} />
           </div>
-          <div className={`fixed inset-y-0 left-0 z-50 md:hidden transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+          <div
+            className={`fixed inset-y-0 left-0 z-50 md:hidden transition-transform duration-300 ease-in-out ${
+              isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+            }`}
+          >
             <Sidebar toggleSidebar={toggleSidebar} />
           </div>
         </>
       )}
 
-      {/* Main content area, Auth pages */}
+      {/* Main content area */}
       <div className="flex-1 my-5 mx-5 overflow-hidden">
         {isAuthPage ? (
-          // Render SignIn or SignUp directly based on the path
           location.pathname === '/signin' ? (
             <SignIn />
           ) : (
             <SignUp />
           )
-        ) : (
-          // Render MainContent for all other routes, including root path
+        ) : isAuthenticated ? (
           <MainContent toggleSidebar={toggleSidebar} />
+        ) : (
+          <p>You must be logged in to access this page.</p>
         )}
       </div>
     </div>
   );
 }
+
 
 
 
