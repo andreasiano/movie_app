@@ -3,15 +3,24 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/store/store";
 import GridCard from "../components/Grid";
 import { removeFromWatchlist } from "../redux/slice/movieAppSlice"; 
+import { auth } from "../firebase/firebase"; // Import Firebase authentication
 
-export default function Watchlist(){
+export default function Watchlist() {
   const dispatch = useDispatch();
-  const watchlist = useSelector(
-    (state: RootState) => state.movieData.watchlist
+  
+  // Get the currently logged-in user
+  const user = auth.currentUser; 
+  const userId = user ? user.uid : null; // Get user ID or null if not logged in
+
+  // Get the user's watchlist from the Redux store
+  const watchlist = useSelector((state: RootState) => 
+    userId ? state.movieData.watchlists[userId] || [] : []
   );
 
   const handleRemoveFromWatchlist = (id: number) => {
-    dispatch(removeFromWatchlist(id));
+    if (userId) {
+      dispatch(removeFromWatchlist({ userId, itemId: id })); // Dispatch with userId and itemId
+    }
   };
 
   return (
@@ -28,12 +37,13 @@ export default function Watchlist(){
               trending={false}
               media_type={item.media_type ?? "default"}
               isWatchlist={true}
-              onRemove={() => handleRemoveFromWatchlist(item.id)}
+              onRemove={() => handleRemoveFromWatchlist(item.id)} // Handle item removal
             />
           ))
         )}
       </div>
     </div>
   );
-};
+}
+
 

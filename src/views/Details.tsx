@@ -11,18 +11,21 @@ import { AiOutlineCalendar } from "react-icons/ai";
 import { addToWatchlist } from "../redux/slice/movieAppSlice";
 import placeholder from "../assets/placeholder.webp";
 import VideoPlay from "../components/VideoPlay";
-
 const placeholderImage = placeholder;
+import { auth } from "../firebase/firebase"; // Import Firebase auth
 
 export default function Details() {
   const { explore, id } = useParams<{ explore: string; id: string }>();
   const dispatch = useDispatch();
   const imageUrl = useSelector((state: RootState) => state.movieData.imageUrl);
-  const watchlist = useSelector((state: RootState) => state.movieData.watchlist);
+  
+  // Access watchlists keyed by user ID
+  const user = auth.currentUser; // Get the current user
+  const userId = user ? user.uid : null; // Get user ID
+  const watchlist = userId ? useSelector((state: RootState) => state.movieData.watchlists[userId]) : [];
 
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-
   const [playVideo, setPlayVideo] = useState(false);
   const [playVideoId, setPlayVideoId] = useState("");
 
@@ -60,23 +63,24 @@ export default function Details() {
       origin_country: ""
     };
 
-    const alreadyInWatchlist = watchlist.some(watchlistItem => watchlistItem.id === item.id);
+    const alreadyInWatchlist = watchlist?.some(watchlistItem => watchlistItem.id === item.id);
 
     if (alreadyInWatchlist) {
       setModalMessage("This item is already in your watchlist!");
-    } else {
-      dispatch(addToWatchlist(item));
+    } else if (userId) {
+      dispatch(addToWatchlist({ userId, mediaItem: item })); // Dispatch with userId and mediaItem
       setModalMessage("Added to Watchlist!");
+    } else {
+      setModalMessage("You need to log in to add items to your watchlist!");
     }
     setShowModal(true);
     setTimeout(() => setShowModal(false), 1000);
   };
 
   const handlePlayVideo = () => {
-    setPlayVideoId(data.id.toString()); // Convert the number to a string
+    setPlayVideoId(data.id.toString());
     setPlayVideo(true);
   };
-  
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -214,6 +218,7 @@ export default function Details() {
     </div>
   );
 }
+
 
 
 
